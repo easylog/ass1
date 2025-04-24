@@ -1,0 +1,1 @@
+export default function ClientManager() { return <div>Client Manager Component</div>; }

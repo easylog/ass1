@@ -1,0 +1,1 @@
+export default function JournalEntry() { return <div>Journal Entry Component</div>; }
