@@ -1,25 +1,16 @@
-import clientPromise from '../../../lib/mongodb';
+import { connectToDatabase } from '../../../../lib/mongodb';
 
 export default async function handler(req, res) {
-  const { kunde } = req.query;
-  const client = await clientPromise;
-  const db = client.db('easylog');
-  const collection = db.collection('changeboard_' + kunde);
-
   if (req.method === 'GET') {
-    const posts = await collection.find().sort({ createdAt: -1 }).toArray();
-    return res.status(200).json(posts);
+    try {
+      const { db } = await connectToDatabase();
+      const data = await db.collection('changeboard').find().toArray();
+      res.status(200).json(data);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  } else {
+    res.status(405).json({ message: 'Method not allowed' });
   }
-
-  if (req.method === 'POST') {
-    const entry = {
-      text: req.body.text,
-      createdAt: new Date(),
-      user: 'DemoUser'
-    };
-    await collection.insertOne(entry);
-    return res.status(201).json({ message: 'Gespeichert', entry });
-  }
-
-  res.status(405).end();
 }
