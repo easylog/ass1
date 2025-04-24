@@ -1,0 +1,1 @@
+export default function Home() { return <div>EasyLog Journal ohne Login</div>; }
